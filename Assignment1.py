@@ -41,10 +41,9 @@ class Matrix():
                 self.Rows[i][j] = k
     
     def printMatrix(self):
-        for i in range(self.numOfRows()):
-            for j in range(self.numofCols()):
-                print(self.Rows[i][j],end=" ")
-            print()
+        m = np.array(self.Rows)
+        print(m)
+
     
     def transpose(self):
         m1 = Matrix(self.numofCols(),self.numOfRows())
