@@ -1,5 +1,5 @@
 # Section 2
-# Agam Shah	        AU2140024
+# Aagam Shah	        AU2140024
 # Paraj Bhatt 	        AU2140110
 # Vinay Mungra	        AU2140120
 # Bhargav Kargatiya 	AU2140121
@@ -19,6 +19,12 @@ def generateIdentityMatrix(size):  # -->Will generate an identity matrix of what
                     m.Rows[i][j] = 0
                     
         return m
+
+def createMatrix():
+    n = int(input("Enter number of Rows: "))
+    m = int(input("Enter number of Columns: "))
+    M = Matrix(n,m)
+    return M
 class Matrix():
     def __init__(self,numRows,numCols):
         self.Rows=[[None]*numCols for i in range(numRows)]  # 1. initializing matrix with all elements set as none
@@ -42,6 +48,7 @@ class Matrix():
     def setMatrix(self):                                   #-->We can set elements of the matrix manually
         n = self.numofCols()
         n1 = self.numOfRows()
+        print("Enter elements Row-wise:")
         for i in range(n1):
             l1 = list(map(int,input().split()))
             for j in range(len(l1)):
@@ -70,6 +77,8 @@ class Matrix():
                     c1=i
                     while(m.Rows[c1][i]==0):
                         c1+=1
+                        if(c1==n):
+                            return 0
                     if(c1!=i):
                         count+=1
                     m.Rows[c1],m.Rows[i] = m.Rows[i],m.Rows[c1]
@@ -93,7 +102,7 @@ class Matrix():
         assert self.FindDeterminant()!=0,"Determinant of the matrix is zero"              # 2. if the determinant of the matrix is zero we cannot find its inverse.
         n = self.numofCols()
         m = self.copyMatrix()
-        m1 = generateIdentityMatrix(n)                              # 3. First generate an idenetity matrix which is same size as that of the matrix we want to inveret
+        m1 = generateIdentityMatrix(n)                              # 3. First generate an idenetity matrix which is same size as that of the matrix we want to invert
         pivot = 0
         for row in range(n):  
             if(n<=pivot):
@@ -126,32 +135,32 @@ class Matrix():
     """
     
     def rref(self):                             # F. Row reduction of matrix. 
-        N = self.numOfRows()
-        M = self.numofCols()
-        m = self.copyMatrix()
-        pivot = 0
+        N = self.numOfRows()  #Number of Rows
+        M = self.numofCols()  #Number of Columns
+        m = self.copyMatrix() #The matrix which is the copy of the original matrix and the one which will be converted to row reduced form
+        pivot = 0  #This will be the pivot variable
         for row in range(N):
             if(M<=pivot):
-                return m
+                return m      #If pivot is more than number of columns then break and return the matrix
             i = row
-            while(m.Rows[i][pivot]==0):
+            while(m.Rows[i][pivot]==0):  #If the element at the pivot position is zero then swap with another row
                 i+=1
                 if(i==N):
                     i = row
                     pivot+=1
                     if(pivot==M):
-                        return m
-            m.Rows[i],m.Rows[row] = m.Rows[row],m.Rows[i]
+                        return m     #if the pivot is equal to number of columns then break and return the  matrix
+            m.Rows[i],m.Rows[row] = m.Rows[row],m.Rows[i] #Swapping of the rows
             c = m.Rows[row][pivot]
             if(c!=0):
                 for j in range(M):
-                    m.Rows[row][j] = m.Rows[row][j]/c
+                    m.Rows[row][j] = m.Rows[row][j]/c  #The pivot row is being divided by the pivot element
             
             for k in range(N):
                 if(k!=row):
                     c1 = m.Rows[k][pivot]
                     for j in range(M):
-                        m.Rows[k][j] = m.Rows[k][j] - c1*m.Rows[row][j]
+                        m.Rows[k][j] = m.Rows[k][j] - c1*m.Rows[row][j] #Making all the elements above and below the pivot positon zero.
             pivot+=1
         return m     
 
@@ -196,39 +205,50 @@ def plotVector2D(x,y):                                                # D. This 
     pt.figure() #creates new figure
     ax = pt.gca() #gets current axis
     ax.quiver(*data,angles='xy',scale_units='xy',scale=1,color='blue') #we can style how the arrow looks using this
-    ax.set_xlim([-1,10])
-    ax.set_ylim([-1,10])
+    ax.set_xlim([-1,10]) #The upper and lower limit of the x-axis.
+    ax.set_ylim([-1,10]) #The upper and lower limit of the y-axis.
     pt.draw()
     pt.show()
 
 def plotVector3D(data):                      #This function will plot x,y,z as a vector in 3d plane.
     fig = pt.figure()
     ax = pt.axes(projection='3d')
-    ax.set_xlim([-1,10])
-    ax.set_ylim(-10,10)
-    ax.set_zlim([0,10])
+    ax.set_xlim([-1,10])  #The upper and lower limit of the x-axis.
+    ax.set_ylim(-10,10)   #The upper and lower limit of the y-axis.
+    ax.set_zlim([0,10])   #The upper and lower limit of the z-axis.
     start = [0,0,0]
-    ax.quiver(start[0],start[1],start[2],data[0],data[1],data[2])
+    ax.quiver(start[0],start[1],start[2],data[0],data[1],data[2])  #Takes in the origin as well as the final position
     pt.show()
 
-    
-m = Matrix(3,3)
+def matrixInfo(m):
+    print("Matrix M:")
+    m.printMatrix()
+    print()
+
+    print("Inverse of the matrix M:")
+    m.inverse().printMatrix()
+    print()
+    print("Determinant of Matrix M:")
+    print(m.FindDeterminant())
+    print()
+
+    print("Row Reduced Echelon Form of M:")
+    m.rref().printMatrix()
+    print()
+
+    print("Rank of M:")
+    print(m.rank())
+
+m = createMatrix()
 
 m.setMatrix()
-m.printMatrix()
 print()
-
-
-n = m.norm()
-print(n)
+matrixInfo(m)
 
 
 
 
 
-
-
- 
 
     
 
