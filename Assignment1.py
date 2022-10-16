@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as pt
 from mpl_toolkits.mplot3d import Axes3D
 import math
-def generateIdentityMatrix(size):  #Will generate an identity matrix of whatever size you give as input
+def generateIdentityMatrix(size):  # -->Will generate an identity matrix of whatever size you give as input
         m = Matrix(size,size)
         for i in range(size):
             for j in range(size):
@@ -14,15 +14,15 @@ def generateIdentityMatrix(size):  #Will generate an identity matrix of whatever
         return m
 class Matrix():
     def __init__(self,numRows,numCols):
-        self.Rows=[[None]*numCols for i in range(numRows)]  #initializing matrix with all elements set as none
+        self.Rows=[[None]*numCols for i in range(numRows)]  # 1. initializing matrix with all elements set as none
     
     def numOfRows(self):
-        return len(self.Rows)  #Returns number of rows
+        return len(self.Rows)                               # 2. Returns number of rows
     
     def numofCols(self):
-        return len(self.Rows[0])  #returns number of columns
+        return len(self.Rows[0])                            # 3. returns number of columns
 
-    def copyMatrix(self):   #Creates a copy of the matrix
+    def copyMatrix(self):                                   # 4. Creates a copy of the matrix
         n = self.numofCols()
         n1 = self.numOfRows()
         
@@ -32,7 +32,7 @@ class Matrix():
                 m.Rows[i][j] = self.Rows[i][j]
         return m
 
-    def setMatrix(self):         #We can set elements of the matrix manually
+    def setMatrix(self):                                   #-->We can set elements of the matrix manually
         n = self.numofCols()
         n1 = self.numOfRows()
         for i in range(n1):
@@ -45,14 +45,14 @@ class Matrix():
         print(m)
 
     
-    def transpose(self):         #Returns the transpose of the matrix
+    def transpose(self):                                 #-->Returns the transpose of the matrix
         m1 = Matrix(self.numofCols(),self.numOfRows())
         for i in range(self.numOfRows()):
             for j in range(self.numofCols()):
                 m1.Rows[j][i] = self.Rows[i][j]
         return m1
 
-    def FindDeterminant(self):      #Finds the determinant of the matrix
+    def FindDeterminant(self):                          #-->Finds the determinant of the matrix
         assert self.numofCols() == self.numOfRows(),"Given matrix is not a Square Matrix"
         n = self.numOfRows()
         m = self.copyMatrix()
@@ -81,12 +81,12 @@ class Matrix():
             prod*=m.Rows[i][i]
         return prod*(pow(-1,count))  
     
-    def inverse(self): #We find the inverse of the matrix using Gaussian elimination method
-        assert self.numofCols() == self.numOfRows(),"Given matrix is not a Square Matrix" #if The matrix is not a sqaure matrix we cannot find its inverse
-        assert self.FindDeterminant()!=0,"Determinant of the matrix is zero" #if the determinant of the matrix is zero we cannot find its inverse.
+    def inverse(self):                                                                    # A. We find the inverse of the matrix using Gaussian elimination method
+        assert self.numofCols() == self.numOfRows(),"Given matrix is not a Square Matrix" # 1. if The matrix is not a sqaure matrix we cannot find its inverse
+        assert self.FindDeterminant()!=0,"Determinant of the matrix is zero"              # 2. if the determinant of the matrix is zero we cannot find its inverse.
         n = self.numofCols()
         m = self.copyMatrix()
-        m1 = generateIdentityMatrix(n)   #First generate an idenetity matrix which is same size as that of the matrix we want to inveret
+        m1 = generateIdentityMatrix(n)                              # 3. First generate an idenetity matrix which is same size as that of the matrix we want to inveret
         pivot = 0
         for row in range(n):  
             if(n<=pivot):
@@ -118,7 +118,7 @@ class Matrix():
     convert identity matrix into inverse of the matrix.
     """
     
-    def rref(self):
+    def rref(self):                             # F. Row reduction of matrix. 
         N = self.numOfRows()
         M = self.numofCols()
         m = self.copyMatrix()
@@ -148,17 +148,41 @@ class Matrix():
             pivot+=1
         return m     
 
-    def norm(self):
+    def norm(self):                                                 # E. Calculate the norm of the matrix     
         n = self.numOfRows()
         m = self.numofCols()
         assert m==1,"Number of columns should be one for a vector"  #In a vector the number of columns should only be one
         sum = 0
         for i in range(n):
-            sum = sum + self.Rows[i][0]*self.Rows[i][0] #Taking squares of each element.
-        return math.sqrt(sum)  #Taking the square root of the sum to get the norm.
+            sum = sum + self.Rows[i][0]*self.Rows[i][0]             #Taking squares of each element.
+        return math.sqrt(sum)                                       #Taking the square root of the sum to get the norm.
 
 
-def plotVector2D(x,y):    #This funciton will plot x,y as a vector in 2d plane
+
+    def rank(self):                            #G. This method will give the rank  of the given matrix
+        m=self.rref()                          #1. It calls the Row Reduced function to covert given matrix in row echelon form. 
+        nrow=self.numOfRows()
+        ncol=self.numofCols()
+        rank=0
+        a=0
+        for i in range(0,ncol):                # 2. In row reduced matrix, it iterates through every column.
+            flag=False
+            b = np.array([])                   # 3. To check every element, it appends a present number to the b array, 
+            for  j in range(0,nrow):           #and after the column end, it checks the size and elements of the 
+                if(m.Rows[j][i]!= 0):          #array by which we can know if the column is pivot or not.
+                    b=np.append(b,m.Rows[j][i])
+                if(m.Rows[j][i]==1 and j>a and not flag):
+                    a=j
+                    flag=True
+                  
+            if(len(b)==1):
+                if(b[0]==1):
+                    rank+=1                    # 4. If a present column is a pivot, then we can increase the rank by 1.
+            b={}   
+        return rank
+     
+        
+def plotVector2D(x,y):                                                # D. This funciton will plot x,y as a vector in 2d plane
     pt.rcParams["figure.figsize"] = [10,10]
     pt.rcParams["figure.autolayout"] = True
     data = np.array([0,0,x,y])
@@ -170,7 +194,7 @@ def plotVector2D(x,y):    #This funciton will plot x,y as a vector in 2d plane
     pt.draw()
     pt.show()
 
-def plotVector3D(data):   #This function will plot x,y,z as a vector in 3d plane.
+def plotVector3D(data):                      #This function will plot x,y,z as a vector in 3d plane.
     fig = pt.figure()
     ax = pt.axes(projection='3d')
     ax.set_xlim([-1,10])
@@ -181,7 +205,7 @@ def plotVector3D(data):   #This function will plot x,y,z as a vector in 3d plane
     pt.show()
 
     
-m = Matrix(3,1)
+m = Matrix(3,3)
 
 m.setMatrix()
 m.printMatrix()
