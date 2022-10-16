@@ -1,3 +1,10 @@
+# Section 2
+# Agam Shah	        AU2140024
+# Paraj Bhatt 	        AU2140110
+# Vinay Mungra	        AU2140120
+# Bhargav Kargatiya 	AU2140121
+# Bhavy Jhaveri	        AU2140168
+
 import numpy as np
 import matplotlib.pyplot as pt
 from mpl_toolkits.mplot3d import Axes3D
